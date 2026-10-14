@@ -8,131 +8,194 @@
     <link rel="stylesheet" href="/style.css" />
     <script type="module" src="/admin.js"></script>
   </head>
-  <body>
+  <body class="admin-page">
     <header>
       <div class="shell head">
         <a href="/"><img class="brand" src="/logo.jpg" alt="ASEMUC" /></a>
         <nav><a href="/">Ver página pública ↗</a><span>Administración</span></nav>
       </div>
     </header>
-    <main class="shell">
-      <details class="panel help">
-        <summary>Ayuda para administrar ASEMUC</summary>
-        <h3>Publicar un convenio</h3>
-        <p>
-          Completá los campos con asterisco y elegí Borrador para revisarlo, o Publicado para
-          mostrarlo cuando sus fechas lo permitan. Las imágenes admiten PNG, JPG o WebP hasta 1 MB.
-        </p>
-        <h3>Corregir un error</h3>
-        <p>
-          Editar permite actualizar la ficha. Eliminar la mueve a Ver papelera, desde donde podés
-          restaurarla. Si otra persona cambió la ficha, actualizá la lista antes de volver a editar.
-        </p>
-        <h3>Acceso de administradores</h3>
-        <p>
-          Control de usuarios muestra las cuentas y permite crear administradores. Para cambiar o
-          restablecer una contraseña, confirmá tu contraseña actual. Si no podés entrar, pedí ayuda
-          a otro administrador.
-        </p>
-        <p>
-          Atajo: Alt + B enfoca la búsqueda de convenios. Escape cierra los diálogos. Volver a la
-          lista pide confirmación si hay cambios sin guardar.
-        </p>
-      </details>
-      <p id="message" class="message" role="status"></p>
-      <section id="auth" class="auth panel" hidden>
-        <span class="tag">Acceso de administradores</span>
-        <h1 id="auth-title">Bienvenido de nuevo</h1>
-        <p class="muted">Gestioná los convenios y beneficios de ASEMUC.</p>
-        <form id="login">
-          <label
-            >Correo electrónico<input
-              name="email"
-              type="email"
-              required
-              autocomplete="username" /></label
-          ><label
-            >Contraseña<input
-              name="password"
-              type="password"
-              required
-              minlength="12"
-              maxlength="128"
-              autocomplete="current-password" /></label
-          ><label id="invite-label" hidden
-            >Código de invitación<input name="invite" autocomplete="off" /></label
-          ><button type="submit" id="auth-submit">Iniciar sesión</button>
-        </form>
-        <p><button class="secondary" id="switch">Registrar administrador</button></p>
-        <p class="muted">
-          Las contraseñas requieren de 12 a 128 caracteres. El registro requiere un código de
-          invitación entregado por ASEMUC.
-        </p>
-      </section>
-      <section id="dashboard" hidden>
-        <div class="toolbar">
-          <h2 id="dashboard-title">Gestión de convenios</h2>
-          <button id="new">+ Añadir convenio</button
-          ><button class="secondary" id="reload">Actualizar</button
-          ><button class="secondary" id="logout">Cerrar sesión</button>
+    <div class="admin-layout" id="admin-layout">
+      <aside class="admin-sidebar" id="admin-sidebar" hidden aria-label="Panel administrativo">
+        <div class="sidebar-heading">
+          <span class="tag">Espacio de trabajo</span><strong>Administración</strong>
         </div>
-        <div class="toolbar">
-          <button class="secondary" id="trash-toggle">Ver papelera</button
-          ><button class="secondary" id="users-open">Control de usuarios</button
-          ><button class="secondary" id="password-open">Cambiar mi contraseña</button>
-        </div>
-        <p class="muted" id="summary"></p>
-        <label
-          >Buscar convenios<input
-            id="search"
-            type="search"
-            placeholder="Empresa, categoría o estado"
-            aria-keyshortcuts="Alt+B"
-        /></label>
-        <div class="panel" id="records"></div>
-      </section>
-      <section class="panel" id="editor" hidden>
-        <div class="toolbar">
-          <h2 id="editor-title">Añadir convenio</h2>
-          <button class="secondary" id="cancel">Volver a la lista</button>
-        </div>
-        <form id="convenio">
-          <div class="grid" id="fields"></div>
-          <label
-            >Imagen de la empresa · PNG, JPG o WebP · máximo 1 MB<input
-              id="image"
-              type="file"
-              accept="image/png,image/jpeg,image/webp" /></label
-          ><img id="preview" class="preview" alt="Vista previa del logo" hidden />
-          <p><button type="button" class="secondary" id="remove-image">Quitar imagen</button></p>
-          <p class="muted">
-            Solo los convenios vigentes dentro de sus fechas se muestran públicamente. Un borrador
-            queda guardado para revisión.
+        <button
+          class="secondary sidebar-menu"
+          id="sidebar-menu"
+          aria-expanded="false"
+          aria-controls="admin-navigation"
+        >
+          Menú de administración
+        </button>
+        <nav id="admin-navigation" class="admin-navigation" aria-label="Navegación administrativa">
+          <span class="nav-label">GESTIÓN</span>
+          <button class="nav-item" id="convenios-open">Convenios</button>
+          <button class="nav-item" id="trash-toggle">Papelera</button>
+          <span class="nav-label">ADMINISTRACIÓN</span>
+          <button class="nav-item" id="users-open">Control de usuarios</button>
+          <button class="nav-item" id="password-open">Cambiar mi contraseña</button>
+          <span class="nav-label">RECURSOS</span>
+          <button class="nav-item" id="help-open">Ayuda y orientación</button>
+          <a class="nav-item" href="/" target="_blank" rel="noopener">Ver página pública ↗</a>
+          <div class="sidebar-footer">
+            <span>Sesión administrativa</span
+            ><button class="nav-item nav-logout" id="logout">Cerrar sesión</button>
+          </div>
+        </nav>
+      </aside>
+      <main class="shell admin-content" id="admin-content">
+        <details class="panel help" id="admin-help" hidden>
+          <summary>Ayuda para administrar ASEMUC</summary>
+          <h3>Publicar un convenio</h3>
+          <p>
+            Completá los campos con asterisco y elegí Borrador para revisarlo, o Publicado para
+            mostrarlo cuando sus fechas lo permitan. Las imágenes admiten PNG, JPG o WebP hasta 1
+            MB.
           </p>
-          <button type="submit" id="save">Guardar convenio</button>
-        </form>
-      </section>
-      <section id="users" class="panel" hidden>
-        <div class="toolbar">
-          <h2>Control de usuarios</h2>
-          <button class="secondary" id="users-back">Volver a convenios</button>
-        </div>
-        <p class="muted">
-          Administradores registrados con acceso a convenios y gestión de usuarios.
-        </p>
-        <div id="user-list"></div>
-        <h2>Crear administrador</h2>
-        <form id="create-user">
-          <div class="grid">
-            <label>Nombre<input name="name" maxlength="120" autocomplete="name" /></label
-            ><label
+          <h3>Corregir un error</h3>
+          <p>
+            Editar permite actualizar la ficha. Eliminar la mueve a Ver papelera, desde donde podés
+            restaurarla. Si otra persona cambió la ficha, actualizá la lista antes de volver a
+            editar.
+          </p>
+          <h3>Acceso de administradores</h3>
+          <p>
+            Control de usuarios muestra las cuentas y permite crear administradores. Para cambiar o
+            restablecer una contraseña, confirmá tu contraseña actual. Si no podés entrar, pedí
+            ayuda a otro administrador.
+          </p>
+          <p>
+            Atajo: Alt + B enfoca la búsqueda de convenios. Escape cierra los diálogos. Volver a la
+            lista pide confirmación si hay cambios sin guardar.
+          </p>
+        </details>
+        <p id="message" class="message" role="status"></p>
+        <section id="auth" class="auth panel" hidden>
+          <span class="tag">Acceso de administradores</span>
+          <h1 id="auth-title">Bienvenido de nuevo</h1>
+          <p class="muted">Gestioná los convenios y beneficios de ASEMUC.</p>
+          <form id="login">
+            <label
               >Correo electrónico<input
                 name="email"
                 type="email"
                 required
-                autocomplete="off" /></label
+                autocomplete="username" /></label
             ><label
-              >Contraseña para la nueva cuenta<input
+              >Contraseña<input
+                name="password"
+                type="password"
+                required
+                minlength="12"
+                maxlength="128"
+                autocomplete="current-password" /></label
+            ><label id="invite-label" hidden
+              >Código de invitación<input name="invite" autocomplete="off" /></label
+            ><button type="submit" id="auth-submit">Iniciar sesión</button>
+          </form>
+          <p><button class="secondary" id="switch">Registrar administrador</button></p>
+          <p class="muted">
+            Las contraseñas requieren de 12 a 128 caracteres. El registro requiere un código de
+            invitación entregado por ASEMUC.
+          </p>
+        </section>
+        <section id="dashboard" hidden>
+          <div class="toolbar">
+            <h2 id="dashboard-title">Gestión de convenios</h2>
+            <button id="new">+ Añadir convenio</button
+            ><button class="secondary" id="reload">Actualizar</button>
+          </div>
+          <p class="muted" id="summary"></p>
+          <label
+            >Buscar convenios<input
+              id="search"
+              type="search"
+              placeholder="Empresa, categoría o estado"
+              aria-keyshortcuts="Alt+B"
+          /></label>
+          <div class="panel" id="records"></div>
+        </section>
+        <section class="panel" id="editor" hidden>
+          <div class="toolbar">
+            <h2 id="editor-title">Añadir convenio</h2>
+            <button class="secondary" id="cancel">Volver a la lista</button>
+          </div>
+          <form id="convenio">
+            <div class="grid" id="fields"></div>
+            <label
+              >Imagen de la empresa · PNG, JPG o WebP · máximo 1 MB<input
+                id="image"
+                type="file"
+                accept="image/png,image/jpeg,image/webp" /></label
+            ><img id="preview" class="preview" alt="Vista previa del logo" hidden />
+            <p><button type="button" class="secondary" id="remove-image">Quitar imagen</button></p>
+            <p class="muted">
+              Solo los convenios vigentes dentro de sus fechas se muestran públicamente. Un borrador
+              queda guardado para revisión.
+            </p>
+            <button type="submit" id="save">Guardar convenio</button>
+          </form>
+        </section>
+        <section id="users" class="panel" hidden>
+          <div class="toolbar">
+            <h2>Control de usuarios</h2>
+            <button class="secondary" id="users-back">Volver a convenios</button>
+          </div>
+          <p class="muted">
+            Administradores registrados con acceso a convenios y gestión de usuarios.
+          </p>
+          <div id="user-list"></div>
+          <h2>Crear administrador</h2>
+          <form id="create-user">
+            <div class="grid">
+              <label>Nombre<input name="name" maxlength="120" autocomplete="name" /></label
+              ><label
+                >Correo electrónico<input
+                  name="email"
+                  type="email"
+                  required
+                  autocomplete="off" /></label
+              ><label
+                >Contraseña para la nueva cuenta<input
+                  name="password"
+                  type="password"
+                  required
+                  minlength="12"
+                  maxlength="128"
+                  autocomplete="new-password" /></label
+              ><label
+                >Confirmar contraseña nueva<input
+                  name="confirm"
+                  type="password"
+                  required
+                  minlength="12"
+                  maxlength="128"
+                  autocomplete="new-password" /></label
+              ><label class="wide"
+                >Tu contraseña actual para autorizar<input
+                  name="currentPassword"
+                  type="password"
+                  required
+                  maxlength="128"
+                  autocomplete="current-password"
+              /></label>
+            </div>
+            <button type="submit">Crear administrador</button>
+          </form>
+        </section>
+        <section id="password-panel" class="panel auth" hidden>
+          <h2>Cambiar mi contraseña</h2>
+          <form id="change-password">
+            <label
+              >Contraseña actual<input
+                name="currentPassword"
+                type="password"
+                required
+                maxlength="128"
+                autocomplete="current-password" /></label
+            ><label
+              >Contraseña nueva<input
                 name="password"
                 type="password"
                 required
@@ -146,54 +209,17 @@
                 required
                 minlength="12"
                 maxlength="128"
-                autocomplete="new-password" /></label
-            ><label class="wide"
-              >Tu contraseña actual para autorizar<input
-                name="currentPassword"
-                type="password"
-                required
-                maxlength="128"
-                autocomplete="current-password"
+                autocomplete="new-password"
             /></label>
-          </div>
-          <button type="submit">Crear administrador</button>
-        </form>
-      </section>
-      <section id="password-panel" class="panel auth" hidden>
-        <h2>Cambiar mi contraseña</h2>
-        <form id="change-password">
-          <label
-            >Contraseña actual<input
-              name="currentPassword"
-              type="password"
-              required
-              maxlength="128"
-              autocomplete="current-password" /></label
-          ><label
-            >Contraseña nueva<input
-              name="password"
-              type="password"
-              required
-              minlength="12"
-              maxlength="128"
-              autocomplete="new-password" /></label
-          ><label
-            >Confirmar contraseña nueva<input
-              name="confirm"
-              type="password"
-              required
-              minlength="12"
-              maxlength="128"
-              autocomplete="new-password"
-          /></label>
-          <p class="muted">
-            Se cerrarán todas tus sesiones. Iniciá sesión otra vez con la nueva contraseña.
-          </p>
-          <button type="submit">Guardar contraseña</button>
-          <button type="button" class="secondary" id="password-back">Cancelar</button>
-        </form>
-      </section>
-    </main>
+            <p class="muted">
+              Se cerrarán todas tus sesiones. Iniciá sesión otra vez con la nueva contraseña.
+            </p>
+            <button type="submit">Guardar contraseña</button>
+            <button type="button" class="secondary" id="password-back">Cancelar</button>
+          </form>
+        </section>
+      </main>
+    </div>
     <dialog id="reset-dialog" aria-labelledby="reset-title">
       <h2 id="reset-title">Restablecer contraseña</h2>
       <p id="reset-target"></p>

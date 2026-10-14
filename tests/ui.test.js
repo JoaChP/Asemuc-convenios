@@ -97,6 +97,25 @@ test('interfaz administrativa en DOM aislado', async (t) => {
       await tick();
       assert.equal($('dashboard').hidden, false);
     });
+    await t.test('barra lateral indica sección y protege la edición al navegar', async () => {
+      assert.equal($('admin-sidebar').hidden, false);
+      assert.equal($('convenios-open').getAttribute('aria-current'), 'page');
+      $('records').querySelector('button').click();
+      $('convenio').elements.nombre.dispatchEvent(new w.Event('input', { bubbles: true }));
+      $('users-open').click();
+      assert.equal($('confirm-dialog').open, true);
+      $('confirm-no').click();
+      await tick();
+      assert.equal($('editor').hidden, false);
+      $('convenios-open').click();
+      $('confirm-yes').click();
+      await tick();
+      assert.equal($('dashboard').hidden, false);
+      $('sidebar-menu').click();
+      assert.equal($('sidebar-menu').getAttribute('aria-expanded'), 'true');
+      $('sidebar-menu').click();
+      assert.equal($('sidebar-menu').getAttribute('aria-expanded'), 'false');
+    });
     await t.test('eliminar solo envía solicitud al confirmar', async () => {
       const del = $('records').querySelector('button.danger');
       del.click();
@@ -119,10 +138,10 @@ test('interfaz administrativa en DOM aislado', async (t) => {
       $('records').querySelector('button').click();
       await tick();
       assert.equal(requests.find((request) => request.action === 'restore').body.id, fixture.id);
-      $('trash-toggle').click();
+      $('convenios-open').click();
       await tick();
       assert.equal($('new').hidden, false);
-      assert.equal($('trash-toggle').textContent, 'Ver papelera');
+      assert.equal($('trash-toggle').textContent, 'Papelera');
     });
     await t.test('acción ocupada muestra estado y bloquea envíos duplicados', async () => {
       let calls = 0,

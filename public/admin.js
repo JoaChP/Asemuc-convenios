@@ -55,6 +55,24 @@ function message(e) {
   if (e) window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function show(id) {
+  const authenticated = id !== 'auth';
+  $('admin-sidebar').hidden = !authenticated;
+  $('admin-layout').classList.toggle('is-authenticated', authenticated);
+  if (!authenticated) $('admin-help').hidden = true;
+  const active =
+    id === 'users'
+      ? 'users-open'
+      : id === 'password-panel'
+        ? 'password-open'
+        : trashMode && id === 'dashboard'
+          ? 'trash-toggle'
+          : 'convenios-open';
+  for (const button of document.querySelectorAll('.admin-navigation button')) {
+    if (button.id === active) button.setAttribute('aria-current', 'page');
+    else button.removeAttribute('aria-current');
+  }
+  $('sidebar-menu').setAttribute('aria-expanded', 'false');
+  $('admin-sidebar').classList.remove('menu-open');
   for (const x of ['auth', 'dashboard', 'editor', 'users', 'password-panel'])
     $(x).hidden = x !== id;
 }
@@ -62,7 +80,7 @@ function render() {
   const records = $('records');
   records.replaceChildren();
   $('dashboard-title').textContent = trashMode ? 'Papelera de convenios' : 'Gestión de convenios';
-  $('trash-toggle').textContent = trashMode ? 'Volver a convenios' : 'Ver papelera';
+  $('trash-toggle').textContent = 'Papelera';
   $('new').hidden = trashMode;
   $('summary').textContent = trashMode
     ? items.length + ' convenios en la papelera. Podés restaurarlos.'
@@ -189,8 +207,9 @@ $('convenio').addEventListener('input', () => {
   dirty = true;
 });
 $('trash-toggle').onclick = async () => {
+  if (!(await leaveEditor())) return;
   const previousMode = trashMode;
-  trashMode = !trashMode;
+  trashMode = true;
   $('search').value = '';
   try {
     await runBusy($('trash-toggle'), 'Cargando…', () => load());
@@ -199,7 +218,7 @@ $('trash-toggle').onclick = async () => {
     render();
     message(error);
   } finally {
-    $('trash-toggle').textContent = trashMode ? 'Volver a convenios' : 'Ver papelera';
+    $('trash-toggle').textContent = 'Papelera';
   }
 };
 window.addEventListener('beforeunload', (e) => {
@@ -244,6 +263,7 @@ $('login').onsubmit = async (event) => {
   }
 };
 $('logout').onclick = async () => {
+  if (!(await leaveEditor())) return;
   try {
     await api('logout', {});
     items = [];
@@ -364,7 +384,8 @@ async function loadUsers() {
   }
   show('users');
 }
-$('users-open').onclick = () => {
+$('users-open').onclick = async () => {
+  if (!(await leaveEditor())) return;
   message('');
   runBusy($('users-open'), 'Cargando usuarios…', loadUsers).catch(message);
 };
@@ -372,7 +393,8 @@ $('users-back').onclick = () => {
   $('create-user').reset();
   show('dashboard');
 };
-$('password-open').onclick = () => {
+$('password-open').onclick = async () => {
+  if (!(await leaveEditor())) return;
   message('');
   $('change-password').reset();
   show('password-panel');
@@ -437,3 +459,35 @@ document.addEventListener('keydown', (event) => {
     $('search').focus();
   }
 });
+
+async function leaveEditor() {
+  if (
+    dirty &&
+    !(await confirmAction(
+      'Tenés cambios sin guardar. ¿Descartarlos para continuar?',
+      'Descartar cambios',
+    ))
+  )
+    return false;
+  dirty = false;
+  return true;
+}
+$('convenios-open').onclick = async () => {
+  if (!(await leaveEditor())) return;
+  trashMode = false;
+  $('search').value = '';
+  message('');
+  await load().catch(message);
+};
+$('help-open').onclick = () => {
+  const help = $('admin-help');
+  help.hidden = !help.hidden;
+  help.open = !help.hidden;
+  $('help-open').setAttribute('aria-expanded', String(!help.hidden));
+  if (!help.hidden) help.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+$('sidebar-menu').onclick = () => {
+  const expanded = $('sidebar-menu').getAttribute('aria-expanded') !== 'true';
+  $('sidebar-menu').setAttribute('aria-expanded', String(expanded));
+  $('admin-sidebar').classList.toggle('menu-open', expanded);
+};
