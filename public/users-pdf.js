@@ -176,6 +176,10 @@ export async function downloadUsersPdf(users) {
   logo.src = '/logo.jpg';
   await logo.decode();
   const bytes = await createUsersPdf(users, { logo });
+  downloadPdf(bytes, 'usuarios');
+}
+
+export function downloadPdf(bytes, kind) {
   const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
   const link = document.createElement('a');
   link.href = url;
@@ -186,7 +190,7 @@ export async function downloadUsersPdf(users) {
     day: '2-digit',
   }).formatToParts(new Date());
   const part = (type) => parts.find((value) => value.type === type).value;
-  link.download = `ASEMUC-usuarios-${part('year')}-${part('month')}-${part('day')}.pdf`;
+  link.download = `ASEMUC-${kind}-${part('year')}-${part('month')}-${part('day')}.pdf`;
   document.body.append(link);
   link.click();
   link.remove();

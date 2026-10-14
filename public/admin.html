@@ -124,6 +124,15 @@
               placeholder="Empresa, categoría o estado"
               aria-keyshortcuts="Alt+B"
           /></label>
+          <div class="toolbar export-options" id="convenios-export">
+            <button type="button" class="secondary" id="convenios-pdf-all">
+              Descargar todos (PDF)
+            </button>
+            <button type="button" class="secondary" id="convenios-pdf-filtered">
+              Descargar filtrados (PDF)
+            </button>
+            <span class="muted" id="filtered-count" aria-live="polite"></span>
+          </div>
           <div class="panel" id="records"></div>
         </section>
         <section class="panel" id="editor" hidden>

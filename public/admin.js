@@ -1,3 +1,5 @@
+import { downloadConveniosPdf } from './convenios-pdf.js';
+import { filterConvenios } from './convenio-filter.js';
 import { downloadUsersPdf } from './users-pdf.js';
 import { initPreferences, translate } from './preferences.js';
 import { $, el, api, norm, runBusy, updateForm, enhanceForms } from './shared.js';
@@ -96,19 +98,12 @@ function render() {
       items.filter((r) => r.estado === 'vigente').length +
       ' marcados como publicados';
   const query = norm($('search').value);
-  for (const record of items.filter((r) =>
-    norm(
-      r.nombre +
-        ' ' +
-        r.categoria +
-        ' ' +
-        ESTADOS[r.estado] +
-        ' ' +
-        translate(ESTADOS[r.estado] || '') +
-        ' ' +
-        r.estado,
-    ).includes(query),
-  )) {
+  const filtered = filterConvenios(items, $('search').value, document.documentElement.lang);
+  $('convenios-export').hidden = trashMode;
+  $('convenios-pdf-all').disabled = !items.length;
+  $('convenios-pdf-filtered').disabled = !query || !filtered.length;
+  $('filtered-count').textContent = filtered.length + ' resultados';
+  for (const record of filtered) {
     const row = el('div', undefined, 'record'),
       text = el('div'),
       actions = el('div', undefined, 'record-actions');
@@ -537,3 +532,27 @@ $('users-pdf').onclick = () =>
       message(error);
     }
   });
+
+for (const [id, filtered] of [
+  ['convenios-pdf-all', false],
+  ['convenios-pdf-filtered', true],
+]) {
+  $(id).onclick = () =>
+    runBusy($(id), 'Generando PDF…', async () => {
+      try {
+        const search = filtered ? $('search').value.trim() : '';
+        const language = document.documentElement.lang;
+        const fresh = (await api('list')).items;
+        const selected = filtered ? filterConvenios(fresh, search, language) : fresh;
+        if (!selected.length) throw Error('No hay convenios para descargar.');
+        await downloadConveniosPdf(selected, { search });
+        message('PDF descargado.');
+      } catch (error) {
+        message(error);
+      }
+    });
+}
+
+window.addEventListener('preferences-changed', () => {
+  if (!$('dashboard').hidden) render();
+});
