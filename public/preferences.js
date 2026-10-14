@@ -130,7 +130,7 @@ export function initPreferences() {
     while ((node = walker.nextNode())) {
       if (
         node.parentElement?.closest(
-          'script,style,textarea,[data-no-translate],.record strong,.card h3,.card .tag,.card-body > p,.benefit,#detail-title,#detail-body > p,#detail-body > .tag,#category option:not(:first-child),#location option:not(:first-child)',
+          'script,style,textarea,[data-no-translate],.record strong,.card h3,.card .tag,.card-body > p,.benefit,#detail-title,#detail-body > p,#detail-body > .tag,#category option:not(:first-child),#admin-category option:not(:first-child),#location option:not(:first-child)',
         )
       )
         continue;

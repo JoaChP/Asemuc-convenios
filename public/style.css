@@ -847,3 +847,17 @@ html[data-theme='dark'] .nav-logout {
 #users-list-view .toolbar h2 {
   font-size: 21px;
 }
+
+.admin-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(180px, 1fr);
+  gap: 20px;
+  padding: 20px 22px 3px;
+}
+@media (max-width: 760px) {
+  .admin-filters {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 18px 18px 2px;
+  }
+}

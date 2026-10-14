@@ -133,6 +133,28 @@ test('interfaz administrativa en DOM aislado', async (t) => {
       assert.equal($('dashboard').hidden, false);
       assert.equal($('admin-help').hidden, true);
     });
+    await t.test('salida fallida mantiene aviso de cambios sin guardar', async () => {
+      $('records').querySelector('button').click();
+      $('convenio').elements.nombre.dispatchEvent(new w.Event('input', { bubbles: true }));
+      const savedFetch = globalThis.fetch;
+      try {
+        globalThis.fetch = async () => {
+          throw Error('network');
+        };
+        $('logout').click();
+        $('confirm-yes').click();
+        await tick();
+        assert.equal($('editor').hidden, false);
+        const leaving = new w.Event('beforeunload', { cancelable: true });
+        w.dispatchEvent(leaving);
+        assert.equal(leaving.defaultPrevented, true);
+      } finally {
+        globalThis.fetch = savedFetch;
+        $('cancel').click();
+        if ($('confirm-dialog').open) $('confirm-yes').click();
+        await tick();
+      }
+    });
     await t.test('eliminar solo envía solicitud al confirmar', async () => {
       const del = $('records').querySelector('button.danger');
       del.click();

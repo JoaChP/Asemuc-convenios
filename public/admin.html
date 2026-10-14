@@ -117,13 +117,20 @@
             ><button class="secondary" id="reload">Actualizar</button>
           </div>
           <p class="muted" id="summary"></p>
-          <label
-            >Buscar convenios<input
-              id="search"
-              type="search"
-              placeholder="Empresa, categoría o estado"
-              aria-keyshortcuts="Alt+B"
-          /></label>
+          <div class="admin-filters panel">
+            <label
+              >Buscar convenios<input
+                id="search"
+                type="search"
+                placeholder="Empresa, categoría o estado"
+                aria-keyshortcuts="Alt+B"
+            /></label>
+            <label
+              >Categoría<select id="admin-category">
+                <option value="">Todas las categorías</option>
+              </select></label
+            >
+          </div>
           <div class="toolbar export-options" id="convenios-export">
             <button type="button" class="secondary" id="convenios-pdf-all">
               Descargar todos (PDF)

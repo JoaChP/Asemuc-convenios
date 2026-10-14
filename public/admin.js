@@ -60,6 +60,7 @@ function message(e) {
   if (e) window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function show(id) {
+  if (id !== 'editor' && !$('editor').hidden) dirty = false;
   const authenticated = id !== 'auth';
   document.body.classList.toggle('admin-authenticated', authenticated);
   $('admin-sidebar').hidden = !authenticated;
@@ -98,10 +99,15 @@ function render() {
       items.filter((r) => r.estado === 'vigente').length +
       ' marcados como publicados';
   const query = norm($('search').value);
-  const filtered = filterConvenios(items, $('search').value, document.documentElement.lang);
+  const filtered = filterConvenios(
+    items,
+    $('search').value,
+    document.documentElement.lang,
+    $('admin-category').value,
+  );
   $('convenios-export').hidden = trashMode;
   $('convenios-pdf-all').disabled = !items.length;
-  $('convenios-pdf-filtered').disabled = !query || !filtered.length;
+  $('convenios-pdf-filtered').disabled = (!query && !$('admin-category').value) || !filtered.length;
   $('filtered-count').textContent = filtered.length + ' resultados';
   for (const record of filtered) {
     const row = el('div', undefined, 'record'),
@@ -157,7 +163,7 @@ function render() {
     records.append(
       el(
         'p',
-        query
+        query || $('admin-category').value
           ? 'No encontramos convenios con esa búsqueda. Probá con otro nombre.'
           : trashMode
             ? 'La papelera está vacía.'
@@ -172,6 +178,7 @@ async function load() {
   $('summary').textContent = 'Cargando convenios…';
   try {
     items = (await api(trashMode ? 'trash' : 'list')).items;
+    updateCategories();
     render();
     show('dashboard');
   } catch (error) {
@@ -214,6 +221,7 @@ $('cancel').onclick = async () => {
   show('dashboard');
 };
 $('search').oninput = render;
+$('admin-category').onchange = render;
 $('reload').onclick = () => load().catch(message);
 $('convenio').addEventListener('input', () => {
   dirty = true;
@@ -223,6 +231,7 @@ $('trash-toggle').onclick = async () => {
   const previousMode = trashMode;
   trashMode = true;
   $('search').value = '';
+  $('admin-category').value = '';
   try {
     await runBusy($('trash-toggle'), 'Cargando…', () => load());
   } catch (error) {
@@ -485,13 +494,13 @@ async function leaveEditor() {
     ))
   )
     return false;
-  dirty = false;
   return true;
 }
 $('convenios-open').onclick = async () => {
   if (!(await leaveEditor())) return;
   trashMode = false;
   $('search').value = '';
+  $('admin-category').value = '';
   message('');
   await load().catch(message);
 };
@@ -542,10 +551,13 @@ for (const [id, filtered] of [
       try {
         const search = filtered ? $('search').value.trim() : '';
         const language = document.documentElement.lang;
+        const category = filtered ? $('admin-category').value : '';
         const fresh = (await api('list')).items;
-        const selected = filtered ? filterConvenios(fresh, search, language) : fresh;
+        const selected = filtered ? filterConvenios(fresh, search, language, category) : fresh;
         if (!selected.length) throw Error('No hay convenios para descargar.');
-        await downloadConveniosPdf(selected, { search });
+        await downloadConveniosPdf(selected, {
+          search: [search, category].filter(Boolean).join(' · '),
+        });
         message('PDF descargado.');
       } catch (error) {
         message(error);
@@ -556,3 +568,20 @@ for (const [id, filtered] of [
 window.addEventListener('preferences-changed', () => {
   if (!$('dashboard').hidden) render();
 });
+
+function updateCategories() {
+  const select = $('admin-category'),
+    previous = select.value;
+  const all = el('option', 'Todas las categorías');
+  all.value = '';
+  select.replaceChildren(all);
+  const categories = [...new Set(items.map((record) => record.categoria).filter(Boolean))].sort(
+    (a, b) => a.localeCompare(b, 'es'),
+  );
+  for (const category of categories) {
+    const option = el('option', category);
+    option.value = category;
+    select.append(option);
+  }
+  select.value = categories.includes(previous) ? previous : '';
+}

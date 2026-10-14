@@ -12,6 +12,8 @@ test('exportación filtrada usa la misma selección e idiomas que el listado', (
   assert.deepEqual(filterConvenios(items, 'draft', 'en'), [items[1]]);
   assert.deepEqual(filterConvenios(items, 'ausente'), []);
   assert.equal(filterConvenios(items, '').length, 2);
+  assert.deepEqual(filterConvenios(items, '', 'es', 'Salud'), [items[0]]);
+  assert.deepEqual(filterConvenios(items, 'hotel', 'es', 'Salud'), []);
 });
 test('PDF incluye campos completos y continúa textos extensos sin perder información', async () => {
   const text = [];

@@ -5,17 +5,19 @@ const normalize = (value) =>
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
-export function filterConvenios(items, search, language = 'es') {
+export function filterConvenios(items, search, language = 'es', category = '') {
   const query = normalize(search);
-  return items.filter((record) =>
-    normalize(
-      [
-        record.nombre,
-        record.categoria,
-        ESTADOS[record.estado],
-        translate(ESTADOS[record.estado] || '', language),
-        record.estado,
-      ].join(' '),
-    ).includes(query),
+  return items.filter(
+    (record) =>
+      (!category || record.categoria === category) &&
+      normalize(
+        [
+          record.nombre,
+          record.categoria,
+          ESTADOS[record.estado],
+          translate(ESTADOS[record.estado] || '', language),
+          record.estado,
+        ].join(' '),
+      ).includes(query),
   );
 }
