@@ -61,22 +61,25 @@ function show(id) {
   document.body.classList.toggle('admin-authenticated', authenticated);
   $('admin-sidebar').hidden = !authenticated;
   $('admin-layout').classList.toggle('is-authenticated', authenticated);
-  if (!authenticated) $('admin-help').hidden = true;
+  $('admin-help').open = id === 'admin-help';
+  $('help-open').setAttribute('aria-expanded', String(id === 'admin-help'));
   const active =
-    id === 'users'
-      ? 'users-open'
-      : id === 'password-panel'
-        ? 'password-open'
-        : trashMode && id === 'dashboard'
-          ? 'trash-toggle'
-          : 'convenios-open';
+    id === 'admin-help'
+      ? 'help-open'
+      : id === 'users'
+        ? 'users-open'
+        : id === 'password-panel'
+          ? 'password-open'
+          : trashMode && id === 'dashboard'
+            ? 'trash-toggle'
+            : 'convenios-open';
   for (const button of document.querySelectorAll('.admin-navigation button')) {
     if (button.id === active) button.setAttribute('aria-current', 'page');
     else button.removeAttribute('aria-current');
   }
   $('sidebar-menu').setAttribute('aria-expanded', 'false');
   $('admin-sidebar').classList.remove('menu-open');
-  for (const x of ['auth', 'dashboard', 'editor', 'users', 'password-panel'])
+  for (const x of ['auth', 'dashboard', 'editor', 'users', 'password-panel', 'admin-help'])
     $(x).hidden = x !== id;
 }
 function render() {
@@ -494,12 +497,11 @@ $('convenios-open').onclick = async () => {
   message('');
   await load().catch(message);
 };
-$('help-open').onclick = () => {
-  const help = $('admin-help');
-  help.hidden = !help.hidden;
-  help.open = !help.hidden;
-  $('help-open').setAttribute('aria-expanded', String(!help.hidden));
-  if (!help.hidden) help.scrollIntoView({ behavior: 'smooth', block: 'start' });
+$('help-open').onclick = async () => {
+  if (!(await leaveEditor())) return;
+  message('');
+  show('admin-help');
+  $('admin-help').querySelector('summary').focus();
 };
 $('sidebar-menu').onclick = () => {
   const expanded = $('sidebar-menu').getAttribute('aria-expanded') !== 'true';

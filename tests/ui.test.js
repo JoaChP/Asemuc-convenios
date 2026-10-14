@@ -116,6 +116,23 @@ test('interfaz administrativa en DOM aislado', async (t) => {
       $('sidebar-menu').click();
       assert.equal($('sidebar-menu').getAttribute('aria-expanded'), 'false');
     });
+    await t.test('ayuda solo aparece en su sección y se oculta al navegar', async () => {
+      assert.equal($('admin-help').hidden, true);
+      $('help-open').click();
+      await tick();
+      assert.equal($('admin-help').hidden, false);
+      assert.equal($('admin-help').open, true);
+      assert.equal($('dashboard').hidden, true);
+      assert.equal($('help-open').getAttribute('aria-current'), 'page');
+      $('users-open').click();
+      await tick();
+      assert.equal($('admin-help').hidden, true);
+      assert.equal($('help-open').getAttribute('aria-expanded'), 'false');
+      $('convenios-open').click();
+      await tick();
+      assert.equal($('dashboard').hidden, false);
+      assert.equal($('admin-help').hidden, true);
+    });
     await t.test('eliminar solo envía solicitud al confirmar', async () => {
       const del = $('records').querySelector('button.danger');
       del.click();
