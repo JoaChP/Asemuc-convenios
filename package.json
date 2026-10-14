@@ -1,1 +1,25 @@
-{"name":"asemuc-convenios","version":"1.0.0","private":true,"type":"module","engines":{"node":">=22"},"scripts":{"build":"node scripts/build.mjs","dev":"node --env-file-if-exists=.env scripts/dev.mjs","db:setup":"node --env-file-if-exists=.env scripts/setup.mjs","test":"node --test"},"dependencies":{"@neondatabase/serverless":"^1.0.2"},"devDependencies":{"@electric-sql/pglite":"^0.5.9","jsdom":"^29.1.1"}}
+{
+  "name": "asemuc-convenios",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node --env-file-if-exists=.env scripts/dev.mjs",
+    "db:setup": "node --env-file-if-exists=.env scripts/setup.mjs",
+    "test": "node --test",
+    "format": "prettier --write api lib public scripts tests package.json vercel.json",
+    "format:check": "prettier --check api lib public scripts tests package.json vercel.json"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.9",
+    "jsdom": "^29.1.1",
+    "prettier": "^3.9.10"
+  }
+}
