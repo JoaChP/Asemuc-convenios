@@ -1,3 +1,4 @@
+import { translate } from './preferences.js';
 export const $ = (id) => document.getElementById(id);
 export function el(tag, text, cls) {
   const n = document.createElement(tag);
@@ -41,7 +42,7 @@ export function updateForm(form) {
   if (confirm && password)
     confirm.setCustomValidity(
       confirm.value && confirm.value !== password.value
-        ? 'Las contraseñas nuevas no coinciden.'
+        ? translate('Las contraseñas nuevas no coinciden.')
         : '',
     );
   const button = form.querySelector('button[type="submit"]');
@@ -80,6 +81,9 @@ export async function runBusy(button, label, task) {
 }
 
 export function enhanceForms() {
+  window.addEventListener('preferences-changed', () => {
+    for (const form of document.forms) updateForm(form);
+  });
   for (const form of document.forms) {
     form.addEventListener('input', () => updateForm(form));
     form.addEventListener('reset', () => queueMicrotask(() => updateForm(form)));

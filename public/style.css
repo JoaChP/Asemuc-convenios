@@ -686,3 +686,149 @@ details.help {
 .admin-navigation > a {
   --nav-icon: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%3E%3Cpath%20d%3D%22M14%203h7v7M21%203l-11%2011M10%203H3v18h18v-7%22/%3E%3C/svg%3E');
 }
+
+/* Shared appearance and language preferences */
+.preferences {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.preferences label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  margin: 0;
+}
+.preferences select {
+  width: auto;
+  min-width: 108px;
+  max-width: 155px;
+  margin: 0;
+  padding: 7px 10px;
+  font-size: 12px;
+  min-height: 38px;
+  border-radius: 8px;
+}
+.preferences .theme-toggle {
+  padding: 8px 12px;
+  font-size: 12px;
+  min-height: 38px;
+  white-space: nowrap;
+}
+.workspace-bar {
+  flex-wrap: wrap;
+}
+.workspace-bar .workspace-role {
+  margin-left: auto;
+}
+.admin-page header .head {
+  flex-wrap: wrap;
+  padding-block: 12px;
+}
+html[data-theme='dark'] {
+  --ink: #e5edf5;
+  --muted: #a5b7c7;
+  --line: #31465a;
+  color-scheme: dark;
+}
+html[data-theme='dark'] body {
+  background: #101c29;
+  color: var(--ink);
+}
+html[data-theme='dark'] header,
+html[data-theme='dark'] .panel,
+html[data-theme='dark'] .filters,
+html[data-theme='dark'] .card,
+html[data-theme='dark'] dialog,
+html[data-theme='dark'] .admin-content #dashboard > label {
+  background: #1a2a3b;
+  color: var(--ink);
+  border-color: var(--line);
+}
+html[data-theme='dark'] input,
+html[data-theme='dark'] textarea,
+html[data-theme='dark'] select {
+  background: #122131;
+  border-color: #41586d;
+  color: #e5edf5;
+}
+html[data-theme='dark'] input::placeholder,
+html[data-theme='dark'] textarea::placeholder {
+  color: #9cafc1;
+}
+html[data-theme='dark'] a,
+html[data-theme='dark'] .tag,
+html[data-theme='dark'] .initial,
+html[data-theme='dark'] .help summary,
+html[data-theme='dark'] .benefit {
+  color: #a8d5f5 !important;
+}
+html[data-theme='dark'] button,
+html[data-theme='dark'] .button {
+  background: #2b6691;
+  color: #fff;
+}
+html[data-theme='dark'] .secondary {
+  background: #2a3f53;
+  color: #dceaf5;
+}
+html[data-theme='dark'] .card-top {
+  background: #23384d;
+}
+html[data-theme='dark'] .card-top img,
+html[data-theme='dark'] img.brand {
+  background: #fff;
+  border-radius: 8px;
+}
+html[data-theme='dark'] .workspace-role {
+  background: #1a2a3b;
+  color: #cbd9e5;
+  border-color: var(--line);
+}
+html[data-theme='dark'] .message {
+  color: #ffa7b4;
+}
+html[data-theme='dark'] .admin-content .record-actions .danger,
+html[data-theme='dark'] .danger {
+  background: #472d3a;
+  color: #ffc0cb;
+  border-color: #704052;
+}
+html[data-theme='dark'] .nav-item {
+  background: transparent;
+  color: #c3d3e2;
+}
+html[data-theme='dark'] .nav-item:hover {
+  background: #ffffff0d;
+  color: white;
+}
+html[data-theme='dark'] .nav-item[aria-current='page'] {
+  background: #245477;
+  color: white;
+}
+html[data-theme='dark'] .nav-logout {
+  color: #f0b5ba;
+}
+@media (max-width: 760px) {
+  .preferences {
+    width: 100%;
+    gap: 8px;
+  }
+  .workspace-bar .workspace-role {
+    display: none;
+  }
+  .preferences label {
+    flex: 1;
+  }
+  .preferences select {
+    flex: 1;
+    max-width: none;
+  }
+  header .head {
+    flex-wrap: wrap;
+    padding-block: 16px;
+  }
+}

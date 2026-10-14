@@ -1,5 +1,7 @@
+import { initPreferences } from './preferences.js';
 import { $, el, api, norm, runBusy } from './shared.js';
 
+initPreferences();
 let items = [];
 let loading = false;
 let detailId = null;

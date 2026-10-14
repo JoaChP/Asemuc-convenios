@@ -1,3 +1,4 @@
+import { initPreferences, translate } from './preferences.js';
 import { $, el, api, norm, runBusy, updateForm, enhanceForms } from './shared.js';
 import { CONVENIO_FIELDS, ESTADOS, MAX_IMAGE_BYTES, IMAGE_MIME_TYPES } from './convenio-fields.js';
 const titles = Object.fromEntries(
@@ -6,6 +7,7 @@ const titles = Object.fromEntries(
     field.label + (field.required ? ' *' : ''),
   ]),
 );
+initPreferences();
 let items = [],
   editing = null,
   image,
@@ -91,7 +93,17 @@ function render() {
       ' marcados como publicados';
   const query = norm($('search').value);
   for (const record of items.filter((r) =>
-    norm(r.nombre + ' ' + r.categoria + ' ' + ESTADOS[r.estado] + ' ' + r.estado).includes(query),
+    norm(
+      r.nombre +
+        ' ' +
+        r.categoria +
+        ' ' +
+        ESTADOS[r.estado] +
+        ' ' +
+        translate(ESTADOS[r.estado] || '') +
+        ' ' +
+        r.estado,
+    ).includes(query),
   )) {
     const row = el('div', undefined, 'record'),
       text = el('div'),
@@ -355,7 +367,9 @@ try {
 let resetUser = null;
 const date = (value) =>
   value
-    ? new Date(value).toLocaleString('es-CR', { timeZone: 'America/Costa_Rica' })
+    ? new Date(value).toLocaleString(document.documentElement.lang || 'es-CR', {
+        timeZone: 'America/Costa_Rica',
+      })
     : 'Sin registro';
 async function loadUsers() {
   const { users, currentId } = await api('users');
