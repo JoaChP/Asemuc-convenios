@@ -29,13 +29,14 @@ export default async function handler(req,res,sqlFactory=db){
  }
  const rows=await sql`SELECT * FROM admins WHERE email=${email}`;const a=rows[0];const digest=scryptSync(password,a?.salt||'dummy-salt',64).toString('hex');
  if(!a||!equal(digest,a.password_hash))return send(401,{error:'Credenciales incorrectas'});
+ await sql`DELETE FROM auth_limits WHERE key=${key}`;
  await sql`UPDATE admins SET last_login_at=now() WHERE id=${a.id}`;
  const t=randomBytes(32).toString('hex');await sql`INSERT INTO sessions(token_hash,admin_id,expires_at) VALUES(${hash(t)},${a.id},now()+interval '8 hours')`;
  res.setHeader('Set-Cookie',`asemuc=${t}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${process.env.APP_ORIGIN?.startsWith('https:')?'; Secure':''}`);return send(200,{ok:true});
  }
  if(action==='list'&&req.method==='GET'){
- const rows=admin?await sql`SELECT id,data,updated_at::text AS updated_at FROM convenios ORDER BY data->>'nombre'`:await sql`SELECT id,data,updated_at::text AS updated_at FROM convenios WHERE data->>'estado'='vigente' AND (coalesce(data->>'inicio','')='' OR data->>'inicio' <= to_char(now() AT TIME ZONE 'America/Costa_Rica','YYYY-MM-DD')) AND (coalesce(data->>'fin','')='' OR data->>'fin'>=to_char(now() AT TIME ZONE 'America/Costa_Rica','YYYY-MM-DD')) ORDER BY data->>'nombre'`;
- return send(200,{items:rows.map(r=>({...r.data,id:r.id,updated_at:r.updated_at,logo:'/api/app?action=image&id='+encodeURIComponent(r.id)}))});
+ const rows=admin&&u.searchParams.get('scope')!=='public'?await sql`SELECT id,data,updated_at::text AS updated_at,image IS NOT NULL AS has_image FROM convenios ORDER BY data->>'nombre'`:await sql`SELECT id,data,updated_at::text AS updated_at,image IS NOT NULL AS has_image FROM convenios WHERE data->>'estado'='vigente' AND (coalesce(data->>'inicio','')='' OR data->>'inicio' <= to_char(now() AT TIME ZONE 'America/Costa_Rica','YYYY-MM-DD')) AND (coalesce(data->>'fin','')='' OR data->>'fin'>=to_char(now() AT TIME ZONE 'America/Costa_Rica','YYYY-MM-DD')) ORDER BY data->>'nombre'`;
+ return send(200,{items:rows.map(r=>({...r.data,id:r.id,updated_at:r.updated_at,logo:r.has_image?'/api/app?action=image&id='+encodeURIComponent(r.id):''}))});
  }
  if(action==='image'&&req.method==='GET'){
  const rows=admin?await sql`SELECT image FROM convenios WHERE id=${u.searchParams.get('id')}`:await sql`SELECT image FROM convenios WHERE id=${u.searchParams.get('id')} AND data->>'estado'='vigente' AND (coalesce(data->>'inicio','')='' OR data->>'inicio'<=to_char(now() AT TIME ZONE 'America/Costa_Rica','YYYY-MM-DD')) AND (coalesce(data->>'fin','')='' OR data->>'fin'>=to_char(now() AT TIME ZONE 'America/Costa_Rica','YYYY-MM-DD'))`;
@@ -53,6 +54,7 @@ export default async function handler(req,res,sqlFactory=db){
  if(hits[0].hits>10)return send(429,{error:'Demasiados intentos. Intentá en 15 minutos'});
  const current=(await sql`SELECT salt,password_hash FROM admins WHERE id=${admin.id}`)[0];
  if(!verifyPassword(body.currentPassword,current))return send(403,{error:'Tu contraseña actual es incorrecta'});
+ await sql`DELETE FROM auth_limits WHERE key=${key}`;
  const {email,password}=credentials(action==='create-user'?body.email:admin.email,body.password);
  const {salt,digest}=encodePassword(password);
  if(action==='create-user'){
@@ -83,4 +85,5 @@ export default async function handler(req,res,sqlFactory=db){
  return send(405,{error:'Operación no permitida'});
  }catch(e){console.error('API:',e.code||e.name);return send(e.message==='Base de datos sin configurar'?503:400,{error:e.code?'No se pudo completar la operación':e.message})}
 }
+
 
