@@ -43,3 +43,7 @@ Documentación: [Funciones Node de Vercel](https://vercel.com/docs/functions/run
 
 `npm test` verifica estados, fechas, enlaces e imágenes. Para verificar persistencia y login se necesita una conexión Neon. Antes del despliegue real, completá la prueba manual del paso 7. Desplegado en https://asemuc-convenios.vercel.app con Neon Free asemuc-convenios-db. Verificados los 41 convenios, búsqueda y detalle. Pendiente configurar ADMIN_INVITE_CODE y verificar el flujo administrativo con una cuenta.
 
+
+## Control de usuarios
+Dentro del panel, Control de usuarios muestra los administradores registrados, su nombre, correo, fecha de registro y último acceso. Permite crear cuentas administrativas confirmando la contraseña del operador, sin necesitar el código de invitación. Cambiar mi contraseña exige la contraseña actual y cierra todas las sesiones de la cuenta. Restablecer contraseña permite cambiar la de otro administrador y revoca sus sesiones. No se muestran contraseñas ni sus hashes. Los administradores existentes comparten estos permisos.
+
