@@ -47,3 +47,7 @@ Documentación: [Funciones Node de Vercel](https://vercel.com/docs/functions/run
 ## Control de usuarios
 Dentro del panel, Control de usuarios muestra los administradores registrados, su nombre, correo, fecha de registro y último acceso. Permite crear cuentas administrativas confirmando la contraseña del operador, sin necesitar el código de invitación. Cambiar mi contraseña exige la contraseña actual y cierra todas las sesiones de la cuenta. Restablecer contraseña permite cambiar la de otro administrador y revoca sus sesiones. No se muestran contraseñas ni sus hashes. Los administradores existentes comparten estos permisos.
 
+
+## QA y regresión
+La revisión funcional y sus límites están documentados en QA.md. Ejecutá npm ci y npm test para reproducir las pruebas unitarias, de DOM y de PostgreSQL aislado. Las pruebas no necesitan credenciales de Neon ni modifican producción.
+
