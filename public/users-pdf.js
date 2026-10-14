@@ -179,7 +179,14 @@ export async function downloadUsersPdf(users) {
   const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
   const link = document.createElement('a');
   link.href = url;
-  link.download = 'ASEMUC-usuarios-' + new Date().toISOString().slice(0, 10) + '.pdf';
+  const parts = new Intl.DateTimeFormat('en', {
+    timeZone: 'America/Costa_Rica',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date());
+  const part = (type) => parts.find((value) => value.type === type).value;
+  link.download = `ASEMUC-usuarios-${part('year')}-${part('month')}-${part('day')}.pdf`;
   document.body.append(link);
   link.click();
   link.remove();
