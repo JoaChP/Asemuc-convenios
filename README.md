@@ -20,7 +20,7 @@ Directorio público y administración en español. Frontend estático en `public
    git push -u origin main
    ```
 
-2. En el equipo **joachps-projects** de Vercel: **Add New → Project → Import Git Repository**. Seleccioná el repositorio nuevo. Framework: **Other**. Root Directory: raíz del repositorio. No establezcas `public` como Output Directory: el proyecto incluye funciones en `api/`. Dejá el build sin comando y habilitá Node 22 o superior.
+2. En el equipo **joachps-projects** de Vercel: **Add New → Project → Import Git Repository**. Seleccioná el repositorio nuevo. Framework: **Other**. Root Directory: raíz del repositorio. No establezcas `public` como Output Directory: el proyecto incluye funciones en `api/`. Permití que Vercel ejecute npm run build y habilitá Node 22 o superior.
 3. En el proyecto nuevo, buscá **Storage / Marketplace → Neon**, creá una base nueva usando la opción gratuita disponible y conectala a este proyecto. No conectes la base de protección de datos. Comprobá las condiciones y límites que muestre el panel antes de confirmar.
 4. En **Settings → Environment Variables**, verificá que la integración haya agregado `DATABASE_URL`. Si solo aparece otro nombre de cadena de conexión, agregá `DATABASE_URL` con la cadena PostgreSQL que te proporcione Neon. Agregá `ADMIN_INVITE_CODE` (valor aleatorio largo) y `APP_ORIGIN` (la URL exacta de producción, sin barra final, por ejemplo `https://asemuc-convenios.vercel.app`). No compartas estos secretos en el chat ni los subas a Git.
 5. Para crear las tablas, colocá la cadena de conexión en tu `.env` local y ejecutá `npm run db:setup`. El despliegue también ejecuta esta inicialización automáticamente cuando DATABASE_URL está configurada; la importación inicial solo se aplica una vez.
@@ -33,7 +33,7 @@ Documentación: [Funciones Node de Vercel](https://vercel.com/docs/functions/run
 ## Comportamiento
 
 - Solo se publican registros `vigente` dentro de las fechas de inicio y fin, en horario de Costa Rica.
-- El panel permite añadir, editar y eliminar, con confirmación al eliminar y detección de ediciones simultáneas.
+- El panel permite añadir y editar convenios. Eliminar los mueve a una papelera privada y reversible; Restaurar conserva sus datos, imágenes y reglas de publicación. Se verifican ediciones simultáneas.
 - Las imágenes PNG, JPG y WebP se guardan en PostgreSQL, hasta 1 MB cada una. Para este directorio pequeño simplifica el despliegue; si crece mucho, conviene trasladarlas a almacenamiento de objetos.
 - Las sesiones duran 8 horas, usan cookies HttpOnly/SameSite y se revocan al cerrar sesión. HTTPS habilita Secure. Las contraseñas se guardan con scrypt y sal aleatoria.
 - El API valida autorización y origen. Login/registro tienen límite persistente por correo e IP. El código de invitación habilita creación de administradores, por lo que debe mantenerse privado.
@@ -50,4 +50,9 @@ Dentro del panel, Control de usuarios muestra los administradores registrados, s
 
 ## QA y regresión
 La revisión funcional y sus límites están documentados en QA.md. Ejecutá npm ci y npm test para reproducir las pruebas unitarias, de DOM y de PostgreSQL aislado. Las pruebas no necesitan credenciales de Neon ni modifican producción.
+
+
+
+## Heurísticas de diseño y UX
+HEURISTICAS.md detalla las decisiones aplicadas. CONTRIBUTING.md describe los límites de cada módulo y cómo revisar cambios. La ayuda del panel explica publicación, imágenes, usuarios y papelera. Alt+B enfoca la búsqueda administrativa. npm run format:check y npm test también se ejecutan automáticamente en GitHub Actions.
 

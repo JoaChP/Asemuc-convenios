@@ -138,13 +138,18 @@ function render() {
 async function load() {
   const panel = $('records');
   panel.setAttribute('aria-busy', 'true');
+  panel.inert = true;
   $('summary').textContent = 'Cargando convenios…';
   try {
     items = (await api(trashMode ? 'trash' : 'list')).items;
     render();
     show('dashboard');
+  } catch (error) {
+    $('summary').textContent = 'No pudimos actualizar la lista. Probá con Actualizar.';
+    throw error;
   } finally {
     panel.removeAttribute('aria-busy');
+    panel.inert = false;
   }
 }
 function open(r) {
@@ -315,10 +320,12 @@ window.addEventListener('session-expired', () => {
   show('auth');
   message('Tu sesión venció. Iniciá sesión para continuar.');
 });
+message('Verificando tu sesión…');
 try {
   const { admin } = await api('me');
   if (admin) await load();
   else show('auth');
+  message('');
 } catch (e) {
   show('auth');
   message(e);
@@ -359,7 +366,7 @@ async function loadUsers() {
 }
 $('users-open').onclick = () => {
   message('');
-  loadUsers().catch(message);
+  runBusy($('users-open'), 'Cargando usuarios…', loadUsers).catch(message);
 };
 $('users-back').onclick = () => {
   $('create-user').reset();

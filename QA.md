@@ -1,6 +1,6 @@
 # Informe de QA — ASEMUC
 
-Fecha: 13 de octubre de 2026, Costa Rica.
+Fecha: 13 de octubre de 2026, Costa Rica. Este informe registra la revisión inicial; las mejoras posteriores, incluida la eliminación reversible en papelera y la regresión de 57 comprobaciones, se documentan en HEURISTICAS.md.
 
 Sitio: https://asemuc-convenios.vercel.app
 
@@ -74,3 +74,4 @@ Se creó únicamente el convenio **QA · Prueba técnica temporal**. Se usó par
 - `qa-portada.png`: vista pública durante la regresión.
 
 Las correcciones están en la rama `main` del repositorio público https://github.com/JoaChP/Asemuc-convenios y fueron desplegadas en Vercel. Las pruebas son reproducibles con `npm ci` y `npm test` sin requerir acceso a Neon.
+

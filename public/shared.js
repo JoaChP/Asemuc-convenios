@@ -53,7 +53,7 @@ export function updateForm(form) {
     form.append(feedback);
   }
   feedback.textContent =
-    confirm?.validationMessage ||
+    (confirm?.value && confirm.validity.customError ? confirm.validationMessage : '') ||
     (!form.checkValidity()
       ? 'Completá los campos obligatorios con datos válidos para continuar.'
       : '');
