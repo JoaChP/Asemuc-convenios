@@ -56,6 +56,7 @@ function message(e) {
 }
 function show(id) {
   const authenticated = id !== 'auth';
+  document.body.classList.toggle('admin-authenticated', authenticated);
   $('admin-sidebar').hidden = !authenticated;
   $('admin-layout').classList.toggle('is-authenticated', authenticated);
   if (!authenticated) $('admin-help').hidden = true;

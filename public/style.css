@@ -376,89 +376,119 @@ details.help {
 }
 
 /* Administrative workspace */
-.admin-page > header .shell {
-  max-width: none;
-  padding-inline: 30px;
+.admin-authenticated > header {
+  display: none;
 }
 .admin-layout.is-authenticated {
   display: grid;
-  grid-template-columns: 264px minmax(0, 1fr);
-  min-height: calc(100vh - 100px);
+  grid-template-columns: 252px minmax(0, 1fr);
+  min-height: 100dvh;
 }
 .admin-sidebar {
-  background: white;
-  border-right: 1px solid var(--line);
-  padding: 30px 18px;
+  background: #102a43;
+  color: #c3d3e2;
+  padding: 28px 16px 20px;
   position: sticky;
   top: 0;
-  height: calc(100dvh - 0px);
-  max-height: 100dvh;
+  height: 100dvh;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #34526c transparent;
+}
+.sidebar-brand {
+  display: block;
+  background: #fff;
+  border-radius: 10px;
+  padding: 9px 18px;
+  margin: 0 8px 24px;
+}
+.sidebar-brand img {
+  display: block;
+  width: 100%;
+  height: 64px;
+  object-fit: contain;
 }
 .sidebar-heading {
-  padding: 0 14px 26px;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 22px;
+  padding: 0 14px 22px;
+  border-bottom: 1px solid #ffffff14;
+  margin-bottom: 12px;
+}
+.sidebar-heading .tag {
+  color: #8da7bf;
+  font-size: 9px;
+  letter-spacing: 0.16em;
 }
 .sidebar-heading strong {
   display: block;
-  font-size: 21px;
-  color: var(--navy);
-}
-.sidebar-heading .tag {
-  font-size: 10px;
-  color: var(--muted);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 650;
+  margin-top: 4px;
 }
 .admin-navigation {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 5px;
+  gap: 4px;
 }
 .nav-label {
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  color: var(--muted);
+  color: #8da7bf;
+  font-size: 9px;
+  letter-spacing: 0.14em;
   font-weight: 700;
-  padding: 16px 14px 6px;
+  padding: 18px 14px 7px;
 }
 .nav-item {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   width: 100%;
   text-align: left;
-  border: 1px solid transparent;
-  border-radius: 9px;
-  padding: 12px 14px;
   background: transparent;
-  color: #526678;
+  color: #c3d3e2;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 11px 13px;
   font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
+  font-weight: 500;
   line-height: 1.5;
+  text-decoration: none;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.nav-item::before {
+  content: '';
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  background: currentColor;
+  mask: var(--nav-icon) center / contain no-repeat;
 }
 .nav-item:hover {
-  background: #f1f5f8;
-  color: var(--navy);
+  background: #ffffff0d;
+  color: #fff;
 }
 .nav-item[aria-current='page'] {
-  background: #eaf2f8;
-  border-color: #d5e4ef;
-  color: var(--navy);
-  box-shadow: inset 3px 0 var(--navy);
+  background: #245477;
+  border-color: #376a8c;
+  color: #fff;
+  box-shadow: inset 3px 0 #7fc4f3;
+  font-weight: 650;
 }
 .sidebar-footer {
-  margin-top: 30px;
-  border-top: 1px solid var(--line);
-  padding-top: 18px;
+  margin-top: 28px;
+  border-top: 1px solid #ffffff14;
+  padding-top: 16px;
 }
 .sidebar-footer > span {
   display: block;
   padding: 0 14px 8px;
-  font-size: 11px;
-  color: var(--muted);
+  font-size: 10px;
+  color: #8da7bf;
 }
 .nav-logout {
-  color: #a32637;
+  color: #f0b5ba;
 }
 .sidebar-menu {
   display: none;
@@ -466,76 +496,193 @@ details.help {
 .admin-content {
   width: 100%;
   min-width: 0;
-  padding-inline: clamp(22px, 3vw, 48px);
+  max-width: 1440px;
+  padding-inline: clamp(24px, 3.2vw, 52px);
+}
+.workspace-bar {
+  display: none;
+}
+.admin-authenticated .workspace-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 24px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--muted);
+}
+.workspace-bar > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.workspace-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2a8a70;
+}
+.workspace-divider {
+  color: #a1b2bf;
+  padding: 0 4px;
+}
+.workspace-role {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 5px 12px;
+  color: #425b70;
 }
 .admin-content > .message:empty {
   display: none;
 }
 .admin-content #dashboard > .toolbar {
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
 }
 .admin-content #dashboard-title {
-  font-size: 28px;
+  font-size: 30px;
+  font-weight: 700;
   margin-block: 8px;
+  letter-spacing: -0.035em;
+}
+.admin-content #summary {
+  margin-bottom: 24px;
 }
 .admin-content #dashboard > label {
   background: white;
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 18px 22px 2px;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
+  box-shadow: 0 2px 5px #17375003;
 }
 .admin-content #records {
-  padding-block: 6px;
+  padding: 4px 24px;
+  box-shadow: 0 4px 20px #17375004;
+}
+.admin-content .record {
+  padding-block: 20px;
+}
+.admin-content .record:last-child {
+  border-bottom: 0;
+}
+.admin-content .record strong {
+  font-size: 14px;
+  font-weight: 650;
+}
+.admin-content .record small {
+  margin-top: 3px;
+  font-size: 12px;
+}
+.admin-content .record-actions button {
+  font-size: 12px;
+  padding: 9px 15px;
+  border-radius: 7px;
+}
+.admin-content .record-actions .danger {
+  background: #fff1f2;
+  color: #b3263b;
+  border: 1px solid #f2d7dc;
+}
+.admin-content .record-actions .danger:hover {
+  background: #fce0e4;
 }
 .admin-page button:focus-visible,
 .admin-page a:focus-visible {
-  outline: 3px solid #6ba6d0;
+  outline: 3px solid #70b4e7;
   outline-offset: 3px;
 }
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .admin-layout.is-authenticated {
-    grid-template-columns: 220px minmax(0, 1fr);
+    grid-template-columns: 232px minmax(0, 1fr);
   }
-  .admin-sidebar {
-    padding-inline: 12px;
+  .admin-content #dashboard-title {
+    font-size: 26px;
   }
 }
-@media (max-width: 680px) {
+@media (max-width: 760px) {
   .admin-layout.is-authenticated {
     display: block;
   }
   .admin-sidebar {
     position: static;
     height: auto;
-    max-height: none;
     padding: 16px 18px;
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid #29465f;
+  }
+  .sidebar-brand {
+    display: none;
   }
   .sidebar-heading {
-    display: none;
+    padding: 0 0 12px;
+    margin: 0;
+    border: 0;
+  }
+  .sidebar-heading strong {
+    font-size: 16px;
   }
   .sidebar-menu {
     display: block;
     width: 100%;
     text-align: left;
+    padding: 10px 12px;
+    background: #1e405e;
+    color: #fff;
+    border: 1px solid #3c5a74;
+    border-radius: 8px;
+  }
+  .sidebar-menu::after {
+    content: '☰';
+    float: right;
   }
   .admin-navigation {
     display: none;
-    padding-top: 12px;
+    padding-top: 10px;
   }
   .menu-open .admin-navigation {
     display: flex;
   }
+  .nav-label {
+    padding-top: 12px;
+  }
   .sidebar-footer {
-    margin-top: 12px;
+    margin-top: 14px;
   }
   .admin-content {
     padding-inline: 18px;
   }
-  .admin-page > header .shell {
+  .admin-authenticated .workspace-bar {
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+  }
+  .workspace-role {
+    display: none;
+  }
+  .admin-content #records {
     padding-inline: 18px;
   }
+}
+#convenios-open {
+  --nav-icon: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%223%22%20width%3D%227%22%20height%3D%227%22%20rx%3D%221%22/%3E%3Crect%20x%3D%2214%22%20y%3D%223%22%20width%3D%227%22%20height%3D%227%22%20rx%3D%221%22/%3E%3Crect%20x%3D%223%22%20y%3D%2214%22%20width%3D%227%22%20height%3D%227%22%20rx%3D%221%22/%3E%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%227%22%20height%3D%227%22%20rx%3D%221%22/%3E%3C/svg%3E');
+}
+#trash-toggle {
+  --nav-icon: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%206h18M9%206V3h6v3M5%206l1%2015h12l1-15M10%2010v7M14%2010v7%22/%3E%3C/svg%3E');
+}
+#users-open {
+  --nav-icon: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%229%22%20cy%3D%228%22%20r%3D%223%22/%3E%3Cpath%20d%3D%22M3%2021v-3a6%206%200%200%201%2012%200v3M16%205a3%203%200%200%201%200%206M21%2021v-3a6%206%200%200%200-4-5%22/%3E%3C/svg%3E');
+}
+#password-open {
+  --nav-icon: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%225%22%20y%3D%2210%22%20width%3D%2214%22%20height%3D%2211%22%20rx%3D%222%22/%3E%3Cpath%20d%3D%22M8%2010V6a4%204%200%200%201%208%200v4M12%2014v3%22/%3E%3C/svg%3E');
+}
+#help-open {
+  --nav-icon: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22/%3E%3Cpath%20d%3D%22M9.5%209a2.5%202.5%200%201%201%204.3%201.7c-1.1.8-1.8%201.2-1.8%203.3M12%2017h.01%22/%3E%3C/svg%3E');
+}
+#logout {
+  --nav-icon: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M9%203H4v18h5M9%2012h12M17%208l4%204-4%204%22/%3E%3C/svg%3E');
+}
+.admin-navigation > a {
+  --nav-icon: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%3E%3Cpath%20d%3D%22M14%203h7v7M21%203l-11%2011M10%203H3v18h18v-7%22/%3E%3C/svg%3E');
 }
