@@ -34,7 +34,7 @@ export default async function handler(req,res,sqlFactory=db){
  res.setHeader('Set-Cookie',`asemuc=${t}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${process.env.APP_ORIGIN?.startsWith('https:')?'; Secure':''}`);return send(200,{ok:true});
  }
  if(action==='list'&&req.method==='GET'){
- const rows=admin?await sql`SELECT id,data,updated_at FROM convenios ORDER BY data->>'nombre'`:await sql`SELECT id,data,updated_at FROM convenios WHERE data->>'estado'='vigente' AND (coalesce(data->>'inicio','')='' OR data->>'inicio' <= to_char(now() AT TIME ZONE 'America/Costa_Rica','YYYY-MM-DD')) AND (coalesce(data->>'fin','')='' OR data->>'fin'>=to_char(now() AT TIME ZONE 'America/Costa_Rica','YYYY-MM-DD')) ORDER BY data->>'nombre'`;
+ const rows=admin?await sql`SELECT id,data,updated_at::text AS updated_at FROM convenios ORDER BY data->>'nombre'`:await sql`SELECT id,data,updated_at::text AS updated_at FROM convenios WHERE data->>'estado'='vigente' AND (coalesce(data->>'inicio','')='' OR data->>'inicio' <= to_char(now() AT TIME ZONE 'America/Costa_Rica','YYYY-MM-DD')) AND (coalesce(data->>'fin','')='' OR data->>'fin'>=to_char(now() AT TIME ZONE 'America/Costa_Rica','YYYY-MM-DD')) ORDER BY data->>'nombre'`;
  return send(200,{items:rows.map(r=>({...r.data,id:r.id,updated_at:r.updated_at,logo:'/api/app?action=image&id='+encodeURIComponent(r.id)}))});
  }
  if(action==='image'&&req.method==='GET'){
@@ -83,3 +83,4 @@ export default async function handler(req,res,sqlFactory=db){
  return send(405,{error:'Operación no permitida'});
  }catch(e){console.error('API:',e.code||e.name);return send(e.message==='Base de datos sin configurar'?503:400,{error:e.code?'No se pudo completar la operación':e.message})}
 }
+
