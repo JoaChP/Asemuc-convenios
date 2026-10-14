@@ -1,3 +1,4 @@
+import { downloadUsersPdf } from './users-pdf.js';
 import { initPreferences, translate } from './preferences.js';
 import { $, el, api, norm, runBusy, updateForm, enhanceForms } from './shared.js';
 import { CONVENIO_FIELDS, ESTADOS, MAX_IMAGE_BYTES, IMAGE_MIME_TYPES } from './convenio-fields.js';
@@ -401,11 +402,13 @@ async function loadUsers() {
     $('user-list').append(row);
   }
   show('users');
+  userView('list');
 }
 $('users-open').onclick = async () => {
   if (!(await leaveEditor())) return;
   message('');
-  runBusy($('users-open'), 'Cargando usuarios…', loadUsers).catch(message);
+  userView('create');
+  show('users');
 };
 $('users-back').onclick = () => {
   $('create-user').reset();
@@ -508,3 +511,29 @@ $('sidebar-menu').onclick = () => {
   $('sidebar-menu').setAttribute('aria-expanded', String(expanded));
   $('admin-sidebar').classList.toggle('menu-open', expanded);
 };
+
+function userView(view) {
+  $('users-create-view').hidden = view !== 'create';
+  $('users-list-view').hidden = view !== 'list';
+  for (const name of ['create', 'list']) {
+    const button = $('users-' + name + '-tab');
+    button.setAttribute('aria-pressed', String(view === name));
+    button.classList.toggle('secondary', view !== name);
+  }
+}
+$('users-create-tab').onclick = () => {
+  message('');
+  userView('create');
+};
+$('users-list-tab').onclick = () =>
+  runBusy($('users-list-tab'), 'Cargando usuarios…', loadUsers).catch(message);
+$('users-pdf').onclick = () =>
+  runBusy($('users-pdf'), 'Generando PDF…', async () => {
+    try {
+      const { users } = await api('users');
+      await downloadUsersPdf(users);
+      message('PDF descargado.');
+    } catch (error) {
+      message(error);
+    }
+  });

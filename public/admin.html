@@ -155,44 +155,71 @@
           <p class="muted">
             Administradores registrados con acceso a convenios y gestión de usuarios.
           </p>
-          <div id="user-list"></div>
-          <h2>Crear administrador</h2>
-          <form id="create-user">
-            <div class="grid">
-              <label>Nombre<input name="name" maxlength="120" autocomplete="name" /></label
-              ><label
-                >Correo electrónico<input
-                  name="email"
-                  type="email"
-                  required
-                  autocomplete="off" /></label
-              ><label
-                >Contraseña para la nueva cuenta<input
-                  name="password"
-                  type="password"
-                  required
-                  minlength="12"
-                  maxlength="128"
-                  autocomplete="new-password" /></label
-              ><label
-                >Confirmar contraseña nueva<input
-                  name="confirm"
-                  type="password"
-                  required
-                  minlength="12"
-                  maxlength="128"
-                  autocomplete="new-password" /></label
-              ><label class="wide"
-                >Tu contraseña actual para autorizar<input
-                  name="currentPassword"
-                  type="password"
-                  required
-                  maxlength="128"
-                  autocomplete="current-password"
-              /></label>
+          <div class="user-options" role="group" aria-label="Control de usuarios">
+            <button
+              id="users-create-tab"
+              type="button"
+              aria-pressed="true"
+              aria-controls="users-create-view"
+            >
+              Crear usuario
+            </button>
+            <button
+              id="users-list-tab"
+              type="button"
+              class="secondary"
+              aria-pressed="false"
+              aria-controls="users-list-view"
+            >
+              Ver todos los usuarios
+            </button>
+          </div>
+          <div id="users-list-view" hidden>
+            <div class="toolbar">
+              <h2>Usuarios registrados</h2>
+              <button id="users-pdf" type="button" class="secondary">Descargar PDF</button>
             </div>
-            <button type="submit">Crear administrador</button>
-          </form>
+            <div id="user-list"></div>
+          </div>
+          <div id="users-create-view">
+            <h2>Crear administrador</h2>
+            <form id="create-user">
+              <div class="grid">
+                <label>Nombre<input name="name" maxlength="120" autocomplete="name" /></label
+                ><label
+                  >Correo electrónico<input
+                    name="email"
+                    type="email"
+                    required
+                    autocomplete="off" /></label
+                ><label
+                  >Contraseña para la nueva cuenta<input
+                    name="password"
+                    type="password"
+                    required
+                    minlength="12"
+                    maxlength="128"
+                    autocomplete="new-password" /></label
+                ><label
+                  >Confirmar contraseña nueva<input
+                    name="confirm"
+                    type="password"
+                    required
+                    minlength="12"
+                    maxlength="128"
+                    autocomplete="new-password" /></label
+                ><label class="wide"
+                  >Tu contraseña actual para autorizar<input
+                    name="currentPassword"
+                    type="password"
+                    required
+                    maxlength="128"
+                    autocomplete="current-password"
+                /></label>
+              </div>
+              <button type="submit">Crear administrador</button>
+            </form>
+          </div>
         </section>
         <section id="password-panel" class="panel auth" hidden>
           <h2>Cambiar mi contraseña</h2>

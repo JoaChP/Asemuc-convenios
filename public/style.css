@@ -832,3 +832,18 @@ html[data-theme='dark'] .nav-logout {
     padding-block: 16px;
   }
 }
+
+.user-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-bottom: 22px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+.user-options button {
+  min-height: 44px;
+}
+#users-list-view .toolbar h2 {
+  font-size: 21px;
+}

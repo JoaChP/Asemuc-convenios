@@ -185,6 +185,12 @@ test('interfaz administrativa en DOM aislado', async (t) => {
     await t.test('usuarios registrados y no ofrece restablecer la propia cuenta', async () => {
       $('users-open').click();
       await tick();
+      assert.equal($('users-create-view').hidden, false);
+      assert.equal($('users-list-view').hidden, true);
+      $('users-list-tab').click();
+      await tick();
+      assert.equal($('users-create-view').hidden, true);
+      assert.equal($('users-list-view').hidden, false);
       assert.equal($('users').hidden, false);
       assert.equal($('user-list').querySelectorAll('button').length, 1);
       assert.match($('user-list').textContent, /otro@example.test/);
